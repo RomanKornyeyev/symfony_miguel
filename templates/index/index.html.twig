@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}pruebas{% endblock %}
+
+{% block content %}
+    hola mundo!<br>
+    {{ controller_name }}<br>
+    {# {{ dump(graphics_cards) }} #}
+    <table class="table table-striped table-hover table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Memory</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for card in graphics_cards %}
+                <tr>
+                    <td>{{ card.brand }}</td>
+                    <td>{{ card.model }}</td>
+                    <td>{{ card.memory }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
