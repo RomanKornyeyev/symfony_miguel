@@ -3,30 +3,43 @@
 {% block title %}Notas{% endblock %}
 
 {% block content %}
-    <h1>Notas</h1>
+    <h1 class="mb-3 text-center">Mis notas</h1>
+    <div class="row">
+        {% for nota in notas %}
+            <div class="col-sm-12 mb-3">
+                <div class="card bg-body-tertiary">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ nota.titulo }}</h5>
+                        <p class="text-muted mb-1">{{ nota.fechaCreacion|date('H:i, d/m/Y') }}</p>
+                        <p class="card-text">{{ nota.contenido }}</p>
+                        
+                        <a href="{{ path('app_nota_edit', { id: nota.id }) }}" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-pen"></i> Modificar nota
+                        </a>
+                        <form action="{{ path('app_nota_delete') }}" method="post" class="d-inline-block form-borrar-nota">
+                            <input type="hidden" name="id" value="{{ nota.id }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token('borrar_nota') }}">
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="fa-solid fa-trash-can"></i> Borrar nota
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        
+        {% if notas|length == 0 %}
+            <div class="col-sm-12 mb-3">
+                <div class="alert alert-info text-center" style="max-width: 400px; margin: 25px auto;">
+                    No tienes notas creadas
+                </div>
+            </div>
+        {% endif %}
 
-    {% if notas is not empty %}
-        <table class="table table-striped table-hover table-bordered table-sm">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Contenido</th>
-                    <th>Fecha de creación</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for nota in notas %}
-                    <tr>
-                        <td>{{ nota.id }}</td>
-                        <td>{{ nota.titulo }}</td>
-                        <td>{{ nota.contenido }}</td>
-                        <td>{{ nota.fechaCreacion|date('Y-m-d H:i') }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No hay notas registradas.</p>
-    {% endif %}
+        <div class="text-center mt-3">
+            <a class="btn btn-primary" href="{{ path('app_nota_edit') }}">
+                <i class="fa-solid fa-plus"></i> Crear nueva nota
+            </a>
+        </div>
+    </div>
 {% endblock %}
