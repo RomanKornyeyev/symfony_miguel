@@ -5,6 +5,7 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\NotaRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: NotaRepository::class)]
 #[ORM\Table(name: "nota")]
@@ -16,9 +17,11 @@ class Nota
     private ?int $id = null;
 
     #[ORM\Column(type: "string", length: 255)]
+    #[Assert\NotBlank(message: "El título no puede estar vacío.")]
     private ?string $titulo = null;
 
     #[ORM\Column(type: "text")]
+    #[Assert\NotBlank(message: "El título no puede estar vacío.")]
     private ?string $contenido = null;
 
     #[ORM\Column(type: "datetime")]
