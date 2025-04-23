@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-# MODELS/ENTITIES, FORMS AND REPOSITORIES
+# ORM, MODELS/ENTITIES, FORMS AND REPOSITORIES
 use App\Entity\Nota;
 use App\Form\NotaType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,16 +17,41 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
+# UTILITIES
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException;
+
+
 final class NotasController extends AbstractController
 {
     // Listar todas las notas
     #[Route('/notas', name: 'app_nota')]
-    public function index(EntityManagerInterface $em): Response
+    public function index(Request $request, EntityManagerInterface $em): Response
     {
-        $notas = $em->getRepository(Nota::class)->findAll();
+        // Crea la consulta base para obtener todas las notas ordenadas por fecha de creación
+        $queryBuilder = $em->getRepository(Nota::class)->createQueryBuilder('n')->orderBy('n.fechaCreacion', 'DESC');
 
+        // Adapta el QueryBuilder de Doctrine para que Pagerfanta pueda paginarlo (usa LIMIT y OFFSET internamente)
+        $adapter = new QueryAdapter($queryBuilder);
+
+        // Crea el paginador con la fuente de datos adaptada
+        $pagerfanta = new Pagerfanta($adapter);
+
+        // Define cuántos resultados mostrar por página
+        $pagerfanta->setMaxPerPage(2);
+    
+        // Define cuántos resultados mostrar por página
+        $page = $request->query->getInt('page', 1);
+    
+        try {
+            $pagerfanta->setCurrentPage($page);
+        } catch (OutOfRangeCurrentPageException $e) {
+            return $this->redirectToRoute('app_nota', ['page' => 1]); // Redirigir a la primera página si el número de página no es válido
+        }
+    
         return $this->render('notas/index.html.twig', [
-            'notas' => $notas,
+            'notas' => $pagerfanta,
         ]);
     }
 

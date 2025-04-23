@@ -3,7 +3,26 @@
 {% block title %}Notas{% endblock %}
 
 {% block content %}
+    {# TÍTULO #}
     <h1 class="mb-3 text-center">Mis notas</h1>
+
+    {# PAGINACIÓN #}
+    <div class="d-flex justify-content-between mt-4 flex-wrap align-items-center">
+        <div class="text-center">
+            <a class="btn btn-primary mb-3" href="{{ path('app_nota_edit') }}">
+                <i class="fa-solid fa-plus"></i> Crear nueva nota
+            </a>
+        </div>
+        <div class="mb-2 mb-md-0">
+            {{ pagerfanta(notas, {
+                proximity: 1,
+                prev_message: '<i class="fa-solid fa-chevron-left"></i> Anterior',
+                next_message: 'Siguiente <i class="fa-solid fa-chevron-right"></i>'
+            }) }}
+        </div>
+    </div>
+
+    {# CONTENIDO #}
     <div class="row">
         {% for nota in notas %}
             <div class="col-sm-12 mb-3">
@@ -35,11 +54,5 @@
                 </div>
             </div>
         {% endif %}
-
-        <div class="text-center mt-3">
-            <a class="btn btn-primary" href="{{ path('app_nota_edit') }}">
-                <i class="fa-solid fa-plus"></i> Crear nueva nota
-            </a>
-        </div>
     </div>
 {% endblock %}
