@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ editando ? 'Editar Tarea' : 'Nueva Tarea' }}{% endblock %}
+{% block content %}
+  <h1 class="mb-4 text-center">{{ editando ? 'Editar Tarea' : 'Nueva Tarea' }}</h1>
+  {{ form_start(form, { 'attr': { 'class': 'p-4 p-md-5 border rounded-3 bg-body-tertiary w-50 mx-auto', 'style': 'margin: 0 auto;' } }) }}
+    {{ form_row(form.titulo) }}
+    {{ form_row(form.contenido, { 'attr': { 'rows': 5 } }) }}
+    <button class="btn btn-primary">{{ editando ? 'Actualizar' : 'Crear' }}</button>
+  {{ form_end(form) }}
+
+  <div class="mt-4 text-center">
+    <a class="btn btn-outline-primary" href="{{ path('app_tarea') }}"><i class="fa-solid fa-arrow-left"></i> Volver a la lista</a>
+  </div>
+{% endblock %}

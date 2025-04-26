@@ -1,0 +1,56 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Tareas
+{% endblock %}
+
+{% block content %}
+    <h1> Tareas </h1>
+    <div class="d-flex justify-content-between mt-4 flex-wrap align-items-center">
+        <div class="text-center">
+            <a class="btn btn-primary mb-3" href="{{path('app_tarea_edit')}}">
+                <i class="fa-solid fa-plus"></i> Crear nueva nota
+            </a>
+        </div>
+        <div class="mb-2 mb-md-0">
+            {{ pagerfanta(tareas_vista, {
+                proximity: 1,
+                prev_message: '<i class="fa-solid fa-chevron-left"></i> Anterior',
+                next_message: 'Siguiente <i class="fa-solid fa-chevron-right"></i>'
+            }) }}
+        </div>
+    </div>
+    <table class="table table-danger">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Contenido</th>
+                <th>Fecha de creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tarea in tareas_vista %}
+            <tr>
+                <td>{{ tarea.id }}</td>
+                <td>{{ tarea.titulo }}</td>
+                <td>{{ tarea.contenido }}</td>
+                <td>{{ tarea.fechaCreacion|date('H:i, d/m/Y') }}</td>
+                <td>
+                    <a href="{{path('app_tarea_edit', { id: tarea.id })}}">Editar</a>
+                    <form action="{{ path('app_tarea_delete') }}" method="post" class="d-inline-block form-borrar-nota">
+                        <input type="hidden" name="id" value="{{ tarea.id }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token('borrar_tarea') }}">
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="fa-solid fa-trash-can"></i> Borrar tarea
+                        </button>
+                    </form>
+                </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+        

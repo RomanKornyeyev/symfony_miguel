@@ -51,6 +51,20 @@
 								CRUD Notas
 							</a>
 						</li>
+						<li class="nav-item col-6 col-lg-auto">
+							<a class="nav-link py-2 px-0 px-lg-2
+												{% if 
+													app.request.attributes.get('_route') == 'app_tarea'
+													or app.request.attributes.get('_route') == 'app_tarea_edit'
+												%}
+													active
+												{% endif %} 
+												" 
+								href="{{ path('app_tarea') }}"
+							>
+								CRUD Tareas
+							</a>
+						</li>
 						{# <li class="nav-item col-6 col-lg-auto">
 							<a class="nav-link py-2 px-0 px-lg-2 active" aria-current="true" href="#">Docs</a>
 						</li>
